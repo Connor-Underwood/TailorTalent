@@ -8,6 +8,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker
 
 function App() {
   const [file, setFile] = useState();
+  const [inputText, setInputText] = useState('');
+
   useEffect(() => {
     console.log("File was changed")
   }, [file]);
@@ -20,35 +22,38 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    var fileReader = new FileReader();  
+    
+    if (file) {
+      var fileReader = new FileReader();  
 
-    fileReader.onload = async () => {
-      // Step 4: Turn array buffer into typed array
-      const typedarray = new Uint8Array(fileReader.result);
+      fileReader.onload = async () => {
+        const typedarray = new Uint8Array(fileReader.result);
+        const pdfText = await loadPdf(typedarray);
 
-      // Step 5: Load PDF and extract text
-      const text = await loadPdf(typedarray);
-
-      // Step 6: Send the extracted text to the backend
-      try {
-          const response = await axios.post('http://localhost:5001/api', { text }, {
+        try {
+          const response = await axios.post('http://localhost:5001/api', { 
+            pdfText: pdfText,
+            inputText: inputText
+          }, {
             headers: {
-              'Content-Type' : 'text/plain'
+              'Content-Type': 'application/json'
             }
           });
-          console.log('PDF Received back from Backend:', response.data);
-      } catch (error) {
-          console.error('Error sending text to server:', error);
-      }
-    };
-    fileReader.readAsArrayBuffer(file)
+          console.log('Response from Backend:', response.data);
+        } catch (error) {
+          console.error('Error sending data to server:', error);
+        }
+      };
+      fileReader.readAsArrayBuffer(file)
+    } else {
+      console.log('No file selected. Please select a file before submitting.');
+    }
   }
+// dawnjida
+  const handleTextChange = (event) => {
+    setInputText(event.target.value);
+  };
 
-  const handleTextChange = async (event) => {
-    console.log(event)
-  }
-
-  // Load PDF and extract text
   const loadPdf = async (rawFile) => {
     try {
         const loadingTask = pdfjs.getDocument(rawFile);
@@ -75,10 +80,9 @@ function App() {
     <div>
       <form onSubmit={handleSubmit}>
         <input type="file" accept=".pdf" onChange={handleFileChange} />
+        <input type="text" value={inputText} onChange={handleTextChange}/>
         <input type="submit" value="Submit"/>
-        <input type="text" value="Text" onChange={handleTextChange}/>
       </form>
-      
     </div>
   );
 }
