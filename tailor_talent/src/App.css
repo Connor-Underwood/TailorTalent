@@ -1,0 +1,36 @@
+.masterDiv {
+    display:flex;
+    justify-content: space-evenly;
+
+}
+.SubmissionBody {
+    text-align: center;
+    display:flex;
+    justify-content: left;
+    align-items:center;
+    height:25vh;
+    padding-left: 20px;
+  }
+
+.SubmissionForm {
+    display:flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: teal;
+    padding:40px;
+    border-radius: 10px;
+    box-shadow: 5px 4px 6px black; /* Optional: Adds a shadow for better appearance */
+}
+
+.FileChooser {
+    color: white;
+}
+
+.SuggestionsBody {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25vh;
+    padding-right: 100px;
+}

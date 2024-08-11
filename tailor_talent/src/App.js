@@ -2,7 +2,7 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios'
 import * as pdfjs from 'pdfjs-dist';
-import workerSrc from 'pdfjs-dist/build/pdf.worker.mjs';
+import './App.css'
 
 pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
 
@@ -49,7 +49,6 @@ function App() {
       console.log('No file selected. Please select a file before submitting.');
     }
   }
-// dawnjida
   const handleTextChange = (event) => {
     setInputText(event.target.value);
   };
@@ -77,13 +76,19 @@ function App() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="file" accept=".pdf" onChange={handleFileChange} />
-        <input type="text" value={inputText} onChange={handleTextChange}/>
-        <input type="submit" value="Submit"/>
-      </form>
+    <div className="masterDiv">
+      <div className="SubmissionBody">
+        <form className="SubmissionForm" onSubmit={handleSubmit}>
+          <input className="FileChooser" type="file" accept=".pdf" onChange={handleFileChange} />
+          <input className="JobDescriptionChooser" type="text" value={inputText} onChange={handleTextChange}/>
+          <input className="SubmitButton" type="submit" value="Submit"/>
+        </form>
+      </div>
+      <div className="SuggestionsBody">
+        <ul>What up</ul>
+      </div>
     </div>
+    
   );
 }
 
