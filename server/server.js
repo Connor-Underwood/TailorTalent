@@ -17,22 +17,26 @@ app.listen(port, () => {
     console.log(`Listening on port ${port} right now`)
 })
 
-
 app.post('/api', async (req, res) => {
     console.log(`Received Text: ${req.body}`);
-    const text = req.body // Grab plain text
-    ai_response = await call_openai(text)
+
+    const resume_text = req.body // Grab plain text
+    const job_description = req.? // need to figure out how vijay is going to send
+    ai_response = await call_openai(resume_text, job_description)
     res.send(`OpenAI Response ${ai_response}`)
 });
 
-const call_openai = async (text) => {
+const call_openai = async (resume_text, job_description) => {
     const completion = await openai.chat.completions.create({
-        messages: [{ role: "system", content: "You are a professional resume editor and it is your job to output a tailored resume when given a job description \
-            and an existing resume from a client.", 
-                    role: "user", content: `Here is the job description. ${job_description}`}],
+        messages: [{ role: "system", content: "You are a professional resume editor and it is your job to output a tailored resume when given a job description and an existing resume from a client.", 
+                     role: "system", content: "Use keywords from the job description to shape how you will enhance the original resume.",
+                     role: "system", content: "Only enhance the bullet point sentences. You may not modify or create new experiences for the client.",
+                     role: "user", content: `Here is the job description. ${job_description}`,
+                     role: "user", content: `Here is the resume text ${resume_text}`}],
         model: "gpt-4o-mini",
       });
-    const response = completion.choices[0]
+    const openai_response = completion.choices[0]
+    return openai_response
 }
 
 
