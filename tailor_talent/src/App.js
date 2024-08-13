@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
+
 import './ResumeUploader.css';  // Make sure this path is correct
+// =======
+// import './App.css'
+
+// pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
+// >>>>>>> main
 
 function App() {
   const [file, setFile] = useState();
@@ -101,6 +107,7 @@ function App() {
     });
   }
 
+
   const handleSuggestionAction = (index, accept) => {
     const suggestion = suggestions[index];
     if (accept) {
@@ -143,6 +150,10 @@ function App() {
       });
     }
     setSuggestions(prevSuggestions => prevSuggestions.filter((_, i) => i !== index));
+// =======
+//   const handleTextChange = (event) => {
+//     setInputText(event.target.value);
+// >>>>>>> main
   };
 
   const loadPdf = async (rawFile) => {
@@ -168,6 +179,7 @@ function App() {
   };
 
   return (
+
     <div className="resume-uploader">
       <div className="toggle-container">
         <div className={`toggle-switch ${isFileUpload ? 'left' : 'right'}`}>
@@ -245,7 +257,9 @@ function App() {
           </div>
         </div>
       )}
+
     </div>
+    
   );
 }
 
