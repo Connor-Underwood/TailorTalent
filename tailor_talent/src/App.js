@@ -3,7 +3,14 @@ import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
 import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
-import './ResumeUploader.css';
+
+
+import './ResumeUploader.css';  // Make sure this path is correct
+// =======
+// import './App.css'
+
+// pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
+// >>>>>>> main
 
 function ResumeUploader() {
   const [file, setFile] = useState(null);
@@ -109,6 +116,7 @@ function ResumeUploader() {
     });
   }
 
+
   const handleSuggestionAction = (index, accept) => {
     const suggestion = suggestions[index];
     if (accept) {
@@ -151,6 +159,10 @@ function ResumeUploader() {
       });
     }
     setSuggestions(prevSuggestions => prevSuggestions.filter((_, i) => i !== index));
+// =======
+//   const handleTextChange = (event) => {
+//     setInputText(event.target.value);
+// >>>>>>> main
   };
 
   const loadPdf = async (rawFile) => {
@@ -176,6 +188,7 @@ function ResumeUploader() {
   };
 
   return (
+
     <div className="resume-uploader">
       <h1>Resume Tailoring Tool</h1>
       
@@ -263,7 +276,9 @@ function ResumeUploader() {
           </div>
         </div>
       )}
+
     </div>
+    
   );
 }
 
