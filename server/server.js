@@ -20,17 +20,17 @@ app.listen(port, () => {
 });
 
 app.post('/api', async (req, res) => {
-    const { pdfText, inputText } = req.body;
+    const { resumeText, inputText } = req.body;
 
-    if (!pdfText || !inputText) {
+    if (!resumeText || !inputText) {
         return res.status(400).json({ error: 'Both PDF text and input text are required' });
     }
 
-    console.log(`Received PDF Text: ${pdfText.substring(0, 100)}...`); // Log first 100 characters
+    console.log(`Received PDF Text: ${resumeText.substring(0, 100)}...`); // Log first 100 characters
     console.log(`Received Job Description: ${inputText}`);
     
     try {
-        const suggestions = await call_openai(pdfText, inputText);
+        const suggestions = await call_openai(resumeText, inputText);
         res.json({ suggestions: suggestions });
     } catch (error) {
         console.error('Error calling OpenAI:', error);

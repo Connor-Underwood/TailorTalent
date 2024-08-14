@@ -3,16 +3,10 @@ import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
 import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
+import './App.css'
+import { extractTextFromPDF, extractTextFromTeX } from './FileHandler';
 
-
-import './ResumeUploader.css';  // Make sure this path is correct
-// =======
-// import './App.css'
-
-// pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
-// >>>>>>> main
-
-function ResumeUploader() {
+const ResumeUploader = () => {
   const [file, setFile] = useState(null);
   const [inputText, setInputText] = useState('');
   const [resumeText, setResumeText] = useState('');
@@ -22,6 +16,7 @@ function ResumeUploader() {
   const [tailoredResume, setTailoredResume] = useState('');
   const [error, setError] = useState('');
   const [isFileUpload, setIsFileUpload] = useState(true);
+  const [fileType, setFileType] = useState('')
 
   useEffect(() => {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -35,7 +30,8 @@ function ResumeUploader() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { 'application/pdf': ['.pdf'] },
+    accept: { 'application/pdf': ['.pdf'], 
+              'application/x-tex': ['.tex'] },
     multiple: false
   });
 
@@ -52,11 +48,18 @@ function ResumeUploader() {
     setError('');
     setIsLoading(true);
 
-    let pdfText = '';
+    let fileTextContent = '';
 
     if (isFileUpload) {
       if (file) {
-        pdfText = await extractTextFromPDF(file);
+        if (file.name.endsWith('.pdf')) {
+          fileTextContent = await extractTextFromPDF(file);
+          setResumeText(fileTextContent);
+        } else {
+          fileTextContent = await extractTextFromTeX(file);
+          setResumeText(fileTextContent)
+        }
+        
       } else {
         setError('No file selected. Please select a file before submitting.');
         setIsLoading(false);
@@ -64,7 +67,7 @@ function ResumeUploader() {
       }
     } else {
       if (resumeText) {
-        pdfText = resumeText;
+        setResumeText(resumeText);
       } else {
         setError('No resume text entered. Please enter your resume text before submitting.');
         setIsLoading(false);
@@ -72,12 +75,12 @@ function ResumeUploader() {
       }
     }
 
-    setOriginalResume(pdfText);
-    setTailoredResume(pdfText);
-
+    setOriginalResume(fileTextContent);
+    setTailoredResume(fileTextContent);
+    
     try {
       const response = await axios.post('http://localhost:5001/api', { 
-        pdfText: pdfText,
+        resumeText: resumeText,
         inputText: inputText
       }, {
         headers: {
@@ -98,22 +101,6 @@ function ResumeUploader() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  const extractTextFromPDF = async (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.onload = async () => {
-        try {
-          const typedarray = new Uint8Array(fileReader.result);
-          const pdfText = await loadPdf(typedarray);
-          resolve(pdfText);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      fileReader.readAsArrayBuffer(file);
-    });
   }
 
 
@@ -159,33 +146,9 @@ function ResumeUploader() {
       });
     }
     setSuggestions(prevSuggestions => prevSuggestions.filter((_, i) => i !== index));
-// =======
-//   const handleTextChange = (event) => {
-//     setInputText(event.target.value);
-// >>>>>>> main
   };
 
-  const loadPdf = async (rawFile) => {
-    try {
-      const loadingTask = pdfjs.getDocument(rawFile);
-      const pdf = await loadingTask.promise;
-      
-      let allText = '';
 
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        const page = await pdf.getPage(pageNum);
-        const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
-        allText += `Page ${pageNum}:\n${pageText}\n\n`;
-      }
-      
-      return allText;
-    } catch (error) {
-      console.error('Error loading PDF:', error);
-      setError('Error loading PDF');
-      return '';
-    }
-  };
 
   return (
 
@@ -193,7 +156,7 @@ function ResumeUploader() {
       <h1>Resume Tailoring Tool</h1>
       
       <div className="toggle-container">
-        <span>Upload PDF</span>
+        <span>Upload</span>
         <label className="switch">
           <input
             type="checkbox"
@@ -205,13 +168,15 @@ function ResumeUploader() {
         <span>Paste Resume</span>
       </div>
 
+      
+
       <form onSubmit={handleSubmit}>
         {isFileUpload ? (
           <div {...getRootProps()} className="dropzone">
             <input {...getInputProps()} />
             <CloudArrowUpIcon className="upload-icon" />
             <p>Click to upload or drag and drop</p>
-            <p className="file-info">PDF (MAX. 800x400px)</p>
+            <p className="file-info">Only *.pdf and *.tex files will be accepted (MAX. 800x400px)</p>
             {file && <p className="file-name">{file.name}</p>}
           </div>
         ) : (
