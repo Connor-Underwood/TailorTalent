@@ -1,88 +1,137 @@
-/* Styles for the toggle switch */
-.toggle-container {
-    display: flex;
-    justify-content: center;
+.resume-uploader {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
     margin-bottom: 20px;
   }
   
-  .toggle-switch {
+  .toggle-container {
     display: flex;
-    background-color: #e0e0e0;
-    border-radius: 25px;
-    padding: 2px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .toggle-container span {
+    margin: 0 10px;
+  }
+  
+  .switch {
     position: relative;
-    cursor: pointer;
-    transition: 0.3s ease all;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
   }
   
-  .toggle-option {
-    padding: 10px 20px;
-    z-index: 1;
-    transition: 0.3s ease all;
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
   }
   
-  .toggle-option.active {
-    color: white;
-  }
-  
-  .toggle-switch::before {
-    content: '';
+  .slider {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(50% - 2px);
-    height: calc(100% - 4px);
-    background-color: #007bff;
-    border-radius: 25px;
-    transition: 0.3s ease all;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
   }
   
-  .toggle-switch.right::before {
-    left: calc(50% + 2px);
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
   }
   
-  /* General form styles */
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 600px;
-    margin: 0 auto;
+  input:checked + .slider {
+    background-color: #2196F3;
   }
   
-  input[type="file"],
-  input[type="text"],
-  textarea {
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .upload-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .file-info {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .file-name {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .resume-text-area,
+  .job-description-area {
     width: 100%;
+    min-height: 150px;
     padding: 10px;
+    margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    resize: vertical;
   }
   
-  textarea {
-    min-height: 150px;
-  }
-  
-  button[type="submit"] {
-    background-color: #007bff;
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #1a202c;
     color: white;
-    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 16px;
   }
   
-  button[type="submit"]:hover {
-    background-color: #0056b3;
-  }
-  
-  button[type="submit"]:disabled {
-    background-color: #cccccc;
+  .submit-button:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
   }
   
-  /* Styles for suggestions */
+  .button-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
   .suggestions-container {
     margin-top: 30px;
   }
@@ -126,7 +175,6 @@
     color: white;
   }
   
-  /* Styles for resume display */
   .resume-display {
     display: flex;
     justify-content: space-between;

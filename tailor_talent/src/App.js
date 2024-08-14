@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
+import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
+
 
 import './ResumeUploader.css';  // Make sure this path is correct
 // =======
@@ -9,8 +12,8 @@ import './ResumeUploader.css';  // Make sure this path is correct
 // pdfjs.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
 // >>>>>>> main
 
-function App() {
-  const [file, setFile] = useState();
+function ResumeUploader() {
+  const [file, setFile] = useState(null);
   const [inputText, setInputText] = useState('');
   const [resumeText, setResumeText] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -24,11 +27,17 @@ function App() {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
   }, []);
 
-  const handleFileChange = (event) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles[0]) {
+      setFile(acceptedFiles[0]);
     }
-  }
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'application/pdf': ['.pdf'] },
+    multiple: false
+  });
 
   const handleTextChange = (event) => {
     setInputText(event.target.value);
@@ -181,40 +190,50 @@ function App() {
   return (
 
     <div className="resume-uploader">
+      <h1>Resume Tailoring Tool</h1>
+      
       <div className="toggle-container">
-        <div className={`toggle-switch ${isFileUpload ? 'left' : 'right'}`}>
-          <div
-            className={`toggle-option ${isFileUpload ? 'active' : ''}`}
-            onClick={() => setIsFileUpload(true)}
-          >
-            File Upload
-          </div>
-          <div
-            className={`toggle-option ${!isFileUpload ? 'active' : ''}`}
-            onClick={() => setIsFileUpload(false)}
-          >
-            Text Input
-          </div>
-        </div>
+        <span>Upload PDF</span>
+        <label className="switch">
+          <input
+            type="checkbox"
+            checked={!isFileUpload}
+            onChange={() => setIsFileUpload(!isFileUpload)}
+          />
+          <span className="slider round"></span>
+        </label>
+        <span>Paste Resume</span>
       </div>
 
       <form onSubmit={handleSubmit}>
         {isFileUpload ? (
-          <input type="file" accept=".pdf" onChange={handleFileChange} />
+          <div {...getRootProps()} className="dropzone">
+            <input {...getInputProps()} />
+            <CloudArrowUpIcon className="upload-icon" />
+            <p>Click to upload or drag and drop</p>
+            <p className="file-info">PDF (MAX. 800x400px)</p>
+            {file && <p className="file-name">{file.name}</p>}
+          </div>
         ) : (
-          <textarea 
-            value={resumeText} 
-            onChange={handleResumeTextChange} 
-            placeholder="Paste your resume text here"
+          <textarea
+            value={resumeText}
+            onChange={handleResumeTextChange}
+            placeholder="Paste your resume here..."
+            className="resume-text-area"
           />
         )}
-        <input 
-          type="text" 
-          value={inputText} 
-          onChange={handleTextChange} 
-          placeholder="Enter job description"
+
+        <textarea
+          value={inputText}
+          onChange={handleTextChange}
+          placeholder="Enter the job description here..."
+          className="job-description-area"
         />
-        <button type="submit" disabled={isLoading}>Submit</button>
+
+        <button type="submit" disabled={isLoading} className="submit-button">
+          <PaperAirplaneIcon className="button-icon" />
+          Analyze Resume
+        </button>
       </form>
 
       {isLoading && <p>Processing your request...</p>}
@@ -263,4 +282,4 @@ function App() {
   );
 }
 
-export default App;
+export default ResumeUploader;
