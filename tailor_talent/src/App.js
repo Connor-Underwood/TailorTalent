@@ -154,7 +154,6 @@ const ResumeUploader = () => {
 
 
   return (
-
     <div className="resume-uploader">
       <h1>Resume Tailoring Tool</h1>
       
@@ -209,38 +208,46 @@ const ResumeUploader = () => {
       {error && <p className="error-message">{error}</p>}
 
       {suggestions && suggestions.length > 0 && (
-        <div className="suggestions-container">
-          <h2>Suggestions:</h2>
-          {suggestions.map((suggestion, index) => (
-            <div key={index} className="suggestion-item">
-              <h3>Suggestion {index + 1}:</h3>
-              <div className="suggestion-content">
-                <div className="suggestion-before">
-                  <h4>Before:</h4>
-                  <p>{suggestion.before}</p>
-                </div>
-                <div className="suggestion-after">
-                  <h4>After:</h4>
-                  <p>{suggestion.after}</p>
-                </div>
-              </div>
-              <div className="suggestion-actions">
-                <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
-                <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
-              </div>
-            </div>
-          ))}
+  <div className="suggestions-container">
+    <h2>Suggestions:</h2>
+    {suggestions.map((suggestion, index) => (
+      <div key={index} className="suggestion-item">
+        <h3 className="suggestion-title">{suggestion.title}</h3>
+        <div className="suggestion-content">
+          <div className="suggestion-before">
+            <div className="suggestion-label">Before:</div>
+            <div className="suggestion-text">{suggestion.before}</div>
+          </div>
+          <div className="suggestion-after">
+            <div className="suggestion-label">After:</div>
+            <div className="suggestion-text">{suggestion.after}</div>
+          </div>
+        </div>
+        <div className="suggestion-reasoning">
+          <div className="suggestion-label">Reasoning:</div>
+          <div className="suggestion-text">{suggestion.reasoning}</div>
+        </div>
+        <div className="suggestion-actions">
+          <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
+          <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+      {originalResume && tailoredResume && (
+        <div className="resume-display">
+          <div className="original-resume">
+            <h2>Original Resume:</h2>
+            <pre>{originalResume}</pre>
+          </div>
+          <div className="tailored-resume">
+            <h2>Tailored Resume:</h2>
+            <pre>{tailoredResume}</pre>
+          </div>
         </div>
       )}
-
-      {suggestions && suggestions.length > 0 && file && file.name.endsWith(".tex") && 
-          <div className="convert-option">
-            <p>convert to PDF?</p>
-          </div>}
-
-     
     </div>
-    
   );
 }
 
