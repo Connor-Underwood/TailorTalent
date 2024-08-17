@@ -4,7 +4,8 @@ import axios from 'axios';
 import * as pdfjs from 'pdfjs-dist';
 import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
 import './App.css'
-import { extractTextFromPDF, extractTextFromTeX } from './FileHandler';
+import { extractTextFromPDF, extractTextFromTeX } from './FileHandler.js';
+import ClipLoader from 'react-spinners/ClipLoader.js'
 
 const ResumeUploader = () => {
   const [file, setFile] = useState(null);
@@ -16,7 +17,9 @@ const ResumeUploader = () => {
   const [tailoredResume, setTailoredResume] = useState('');
   const [error, setError] = useState('');
   const [isFileUpload, setIsFileUpload] = useState(true);
-  const [fileType, setFileType] = useState('')
+  const [fromFormat, setFromFormat] = useState('');
+  const [toFormat, setToFormat] = useState('');
+  const [fileType, setFileType] = useState('');
 
   useEffect(() => {
     pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -169,7 +172,6 @@ const ResumeUploader = () => {
       </div>
 
       
-
       <form onSubmit={handleSubmit}>
         {isFileUpload ? (
           <div {...getRootProps()} className="dropzone">
@@ -195,13 +197,15 @@ const ResumeUploader = () => {
           className="job-description-area"
         />
 
+        
+        
         <button type="submit" disabled={isLoading} className="submit-button">
           <PaperAirplaneIcon className="button-icon" />
           Analyze Resume
         </button>
       </form>
 
-      {isLoading && <p>Processing your request...</p>}
+      {isLoading && <ClipLoader color='blue'/>}
       {error && <p className="error-message">{error}</p>}
 
       {suggestions && suggestions.length > 0 && (
@@ -229,19 +233,12 @@ const ResumeUploader = () => {
         </div>
       )}
 
-      {originalResume && tailoredResume && (
-        <div className="resume-display">
-          <div className="original-resume">
-            <h2>Original Resume:</h2>
-            <pre>{originalResume}</pre>
-          </div>
-          <div className="tailored-resume">
-            <h2>Tailored Resume:</h2>
-            <pre>{tailoredResume}</pre>
-          </div>
-        </div>
-      )}
+      {suggestions && suggestions.length > 0 && file && file.name.endsWith(".tex") && 
+          <div className="convert-option">
+            <p>convert to PDF?</p>
+          </div>}
 
+     
     </div>
     
   );

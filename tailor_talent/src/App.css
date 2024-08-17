@@ -93,7 +93,7 @@
   
   .resume-text-area,
   .job-description-area {
-    width: 100%;
+    width: 97.2%;
     min-height: 150px;
     padding: 10px;
     margin-bottom: 20px;
@@ -102,6 +102,12 @@
     resize: vertical;
   }
   
+  .convert-option {
+    display :flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .submit-button {
     display: flex;
     align-items: center;
