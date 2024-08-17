@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
+import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { extractTextFromPDF, extractTextFromTeX } from './HelperFunctions.js';
+import  ClipLoader  from 'react-spinners/ClipLoader.js'
+import { FileUploadOrPaste } from './FileUploadOrPaste.js';
+import { ToggleSwitch } from './ToggleSwitch.js';
+import { Suggestions } from './Suggestions.js';
 import * as pdfjs from 'pdfjs-dist';
-import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline';
 import './App.css'
-import { extractTextFromPDF, extractTextFromTeX } from './FileHandler.js';
-import ClipLoader from 'react-spinners/ClipLoader.js'
 
 const ResumeUploader = () => {
   const [file, setFile] = useState(null);
@@ -58,9 +61,11 @@ const ResumeUploader = () => {
         if (file.name.endsWith('.pdf')) {
           fileTextContent = await extractTextFromPDF(file);
           setResumeText(fileTextContent);
+          setFileType("pdf")
         } else {
           fileTextContent = await extractTextFromTeX(file);
           setResumeText(fileTextContent)
+          setFileType("tex")
         }
         
       } else {
@@ -80,11 +85,14 @@ const ResumeUploader = () => {
 
     setOriginalResume(fileTextContent);
     setTailoredResume(fileTextContent);
-    
+
+
     try {
+      
       const response = await axios.post('http://localhost:5001/api', { 
         resumeText: resumeText,
-        inputText: inputText
+        inputText: inputText,
+        fileType: fileType
       }, {
         headers: {
           'Content-Type': 'application/json'
@@ -157,37 +165,20 @@ const ResumeUploader = () => {
     <div className="resume-uploader">
       <h1>Resume Tailoring Tool</h1>
       
-      <div className="toggle-container">
-        <span>Upload</span>
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={!isFileUpload}
-            onChange={() => setIsFileUpload(!isFileUpload)}
-          />
-          <span className="slider round"></span>
-        </label>
-        <span>Paste Resume</span>
-      </div>
+      <ToggleSwitch
+      isFileUpload={isFileUpload}
+      setIsFileUpload={setIsFileUpload}/>
 
       
       <form onSubmit={handleSubmit}>
-        {isFileUpload ? (
-          <div {...getRootProps()} className="dropzone">
-            <input {...getInputProps()} />
-            <CloudArrowUpIcon className="upload-icon" />
-            <p>Click to upload or drag and drop</p>
-            <p className="file-info">Only *.pdf and *.tex files will be accepted (MAX. 800x400px)</p>
-            {file && <p className="file-name">{file.name}</p>}
-          </div>
-        ) : (
-          <textarea
-            value={resumeText}
-            onChange={handleResumeTextChange}
-            placeholder="Paste your resume here..."
-            className="resume-text-area"
-          />
-        )}
+        <FileUploadOrPaste 
+        isFileUpload={isFileUpload}
+        getRootProps={getRootProps}
+        getInputProps={getInputProps}
+        file={file}
+        resumeText={resumeText}
+        handleResumeTextChange={handleResumeTextChange}/>
+
 
         <textarea
           value={inputText}
@@ -204,49 +195,14 @@ const ResumeUploader = () => {
         </button>
       </form>
 
-      {isLoading && <ClipLoader color='blue'/>}
+      {isLoading && <ClipLoader className="clip-loader" color='blue'/>}
       {error && <p className="error-message">{error}</p>}
 
-      {suggestions && suggestions.length > 0 && (
-  <div className="suggestions-container">
-    <h2>Suggestions:</h2>
-    {suggestions.map((suggestion, index) => (
-      <div key={index} className="suggestion-item">
-        <h3 className="suggestion-title">{suggestion.title}</h3>
-        <div className="suggestion-content">
-          <div className="suggestion-before">
-            <div className="suggestion-label">Before:</div>
-            <div className="suggestion-text">{suggestion.before}</div>
-          </div>
-          <div className="suggestion-after">
-            <div className="suggestion-label">After:</div>
-            <div className="suggestion-text">{suggestion.after}</div>
-          </div>
-        </div>
-        <div className="suggestion-reasoning">
-          <div className="suggestion-label">Reasoning:</div>
-          <div className="suggestion-text">{suggestion.reasoning}</div>
-        </div>
-        <div className="suggestion-actions">
-          <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
-          <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
-      {originalResume && tailoredResume && (
-        <div className="resume-display">
-          <div className="original-resume">
-            <h2>Original Resume:</h2>
-            <pre>{originalResume}</pre>
-          </div>
-          <div className="tailored-resume">
-            <h2>Tailored Resume:</h2>
-            <pre>{tailoredResume}</pre>
-          </div>
-        </div>
-      )}
+      <Suggestions
+      suggestions={suggestions}
+      handleSuggestionAction={handleSuggestionAction}/>
+    
+      
     </div>
   );
 }

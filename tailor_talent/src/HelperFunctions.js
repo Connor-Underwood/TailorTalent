@@ -54,3 +54,6 @@ export const extractTextFromTeX = async (file) => {
     fileReader.readAsText(file);
   });
 };
+
+
+

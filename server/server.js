@@ -20,14 +20,15 @@ app.listen(port, () => {
 });
 
 app.post('/api', async (req, res) => {
-    const { resumeText, inputText } = req.body;
+    const { resumeText, inputText, fileType } = req.body; // do some action based on file type (change prompt based on latex vs pdf text)
 
     if (!resumeText || !inputText) {
         return res.status(400).json({ error: 'Both PDF text and input text are required' });
     }
 
-    console.log(`Received PDF Text: ${resumeText.substring(0, 100)}...`); // Log first 100 characters
+    console.log(`Received Resume Text: ${resumeText.substring(0, 100)}...`); // Log first 100 characters
     console.log(`Received Job Description: ${inputText}`);
+    console.log(`Received file with file type ${fileType}`)
     
     try {
         const suggestions = await call_openai(resumeText, inputText);
