@@ -1,2 +1,7 @@
 tailor_talent/node_modules/
 server/node_modules/
+server/resume.tex
+server/resume.pdf
+server/uploads/
+server/resume.aux
+server/resume.log
