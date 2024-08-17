@@ -6,7 +6,9 @@ import { PaperAirplaneIcon, CloudArrowUpIcon } from '@heroicons/react/24/outline
 import './App.css'
 import { extractTextFromPDF, extractTextFromTeX } from './FileHandler';
 
-const ResumeUploader = () => {
+import './ResumeUploader.css';
+
+function ResumeUploader() {
   const [file, setFile] = useState(null);
   const [inputText, setInputText] = useState('');
   const [resumeText, setResumeText] = useState('');
@@ -103,6 +105,21 @@ const ResumeUploader = () => {
     }
   }
 
+  const extractTextFromPDF = async (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.onload = async () => {
+        try {
+          const typedarray = new Uint8Array(fileReader.result);
+          const pdfText = await loadPdf(typedarray);
+          resolve(pdfText);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      fileReader.readAsArrayBuffer(file);
+    });
+  }
 
   const handleSuggestionAction = (index, accept) => {
     const suggestion = suggestions[index];
@@ -151,7 +168,6 @@ const ResumeUploader = () => {
 
 
   return (
-
     <div className="resume-uploader">
       <h1>Resume Tailoring Tool</h1>
       
@@ -205,30 +221,33 @@ const ResumeUploader = () => {
       {error && <p className="error-message">{error}</p>}
 
       {suggestions && suggestions.length > 0 && (
-        <div className="suggestions-container">
-          <h2>Suggestions:</h2>
-          {suggestions.map((suggestion, index) => (
-            <div key={index} className="suggestion-item">
-              <h3>Suggestion {index + 1}:</h3>
-              <div className="suggestion-content">
-                <div className="suggestion-before">
-                  <h4>Before:</h4>
-                  <p>{suggestion.before}</p>
-                </div>
-                <div className="suggestion-after">
-                  <h4>After:</h4>
-                  <p>{suggestion.after}</p>
-                </div>
-              </div>
-              <div className="suggestion-actions">
-                <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
-                <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
-              </div>
-            </div>
-          ))}
+  <div className="suggestions-container">
+    <h2>Suggestions:</h2>
+    {suggestions.map((suggestion, index) => (
+      <div key={index} className="suggestion-item">
+        <h3 className="suggestion-title">{suggestion.title}</h3>
+        <div className="suggestion-content">
+          <div className="suggestion-before">
+            <div className="suggestion-label">Before:</div>
+            <div className="suggestion-text">{suggestion.before}</div>
+          </div>
+          <div className="suggestion-after">
+            <div className="suggestion-label">After:</div>
+            <div className="suggestion-text">{suggestion.after}</div>
+          </div>
         </div>
-      )}
-
+        <div className="suggestion-reasoning">
+          <div className="suggestion-label">Reasoning:</div>
+          <div className="suggestion-text">{suggestion.reasoning}</div>
+        </div>
+        <div className="suggestion-actions">
+          <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
+          <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
       {originalResume && tailoredResume && (
         <div className="resume-display">
           <div className="original-resume">
@@ -241,9 +260,7 @@ const ResumeUploader = () => {
           </div>
         </div>
       )}
-
     </div>
-    
   );
 }
 

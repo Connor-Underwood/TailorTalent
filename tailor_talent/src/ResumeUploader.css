@@ -1,0 +1,278 @@
+.resume-uploader {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .toggle-container span {
+    margin: 0 10px;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+  
+  .dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .upload-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .file-info {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .file-name {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  
+  .resume-text-area,
+  .job-description-area {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .submit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #1a202c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .button-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  
+  .suggestions-container {
+    margin-top: 30px;
+    background-color: #f0f4f8;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  
+  .suggestion-item {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .suggestion-item:hover {
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  }
+  
+  .suggestion-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2d3748;
+  }
+  
+  .suggestion-reasoning {
+    margin-top: 16px;
+    background-color: #f0f4f8;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .suggestion-reasoning .suggestion-label {
+    color: #4a5568;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+  
+  .suggestion-reasoning .suggestion-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #2d3748;
+  }
+  
+  /* Adjust the existing styles to accommodate the new section */
+  .suggestion-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .suggestion-before,
+  .suggestion-after {
+    width: 48%;
+    background-color: #f8fafc;
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .suggestion-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+  .suggestion-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-size: 16px;
+  }
+  
+  .suggestion-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #4a5568;
+  }
+  
+  .suggestion-before .suggestion-label {
+    color: #718096;
+  }
+  
+  .suggestion-after .suggestion-label {
+    color: #38a169;
+  }
+  
+
+  
+  .suggestion-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .suggestion-actions button:first-child {
+    background-color: #48bb78;
+    color: white;
+    margin-right: 12px;
+  }
+  
+  .suggestion-actions button:first-child:hover {
+    background-color: #38a169;
+  }
+  
+  .suggestion-actions button:last-child {
+    background-color: #f56565;
+    color: white;
+  }
+  
+  .suggestion-actions button:last-child:hover {
+    background-color: #e53e3e;
+  }
+  
+  .resume-display {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+  }
+  
+  .original-resume,
+  .tailored-resume {
+    width: 48%;
+  }
+  
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 15px;
+  }
