@@ -10,7 +10,7 @@ import { Suggestions } from './Suggestions.js';
 import * as pdfjs from 'pdfjs-dist';
 import './App.css'
 
-const ResumeUploader = () => {
+const App = () => {
   const [file, setFile] = useState(null);
   const [inputText, setInputText] = useState('');
   const [resumeText, setResumeText] = useState('');
@@ -50,6 +50,7 @@ const ResumeUploader = () => {
   };
 
   const handleSubmit = async (event) => {
+
     event.preventDefault();
     setError('');
     setIsLoading(true);
@@ -61,7 +62,7 @@ const ResumeUploader = () => {
         if (file.name.endsWith('.pdf')) {
           fileTextContent = await extractTextFromPDF(file);
           setResumeText(fileTextContent);
-          setFileType("pdf")
+          setFileType("pdf");
         } else {
           fileTextContent = await extractTextFromTeX(file);
           setResumeText(fileTextContent)
@@ -82,17 +83,14 @@ const ResumeUploader = () => {
         return;
       }
     }
-
-    setOriginalResume(fileTextContent);
-    setTailoredResume(fileTextContent);
-
+    setOriginalResume(resumeText);
+    setTailoredResume(resumeText);
 
     try {
       
       const response = await axios.post('http://localhost:5001/api', { 
-        resumeText: resumeText,
-        inputText: inputText,
-        fileType: fileType
+        fileTextContent: fileTextContent,
+        inputText: inputText      
       }, {
         headers: {
           'Content-Type': 'application/json'
@@ -207,4 +205,4 @@ const ResumeUploader = () => {
   );
 }
 
-export default ResumeUploader;
+export default App;
