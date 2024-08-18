@@ -1,16 +1,45 @@
-.resume-uploader {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Centers the container horizontally */
+  align-items: flex-start; /* Aligns container at the top */
+  box-sizing: border-box; /* Include padding and border in the element's width and height */
+}
 
-    display: flex; /* Enables Flexbox */
-    flex-direction: column; /* Aligns children vertically */
-    align-items: stretch; /* Allows width to be stretched */
-    justify-content: center; /* Centers children vertically */
-    min-height: 10vh; /* Makes the container take at least the full height of the viewport */
-  }
-  
+body {
+  background-color: #1a202c; /* Dark background */
+  color: #ffffff; /* Light text for contrast */
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align content at the top */
+  min-height: 100vh; /* Ensures the content is vertically centered */
+}
+
+.resume-container {
+  display: flex;
+  justify-content: flex-start; /* Aligns children to the left */
+  align-items: flex-start; /* Aligns children to the top */
+  gap: 30px; /* Adds space between the uploader and suggestions */
+  max-width: 1920px; /* Increase the max-width to give more space */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box; /* Ensures padding is included in the width calculations */
+}
+
+.resume-uploader {
+  background-color: #2d3748; /* Darker background for the content area */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  padding: 20px;
+  color: #e2e8f0; /* Light text color */
+  min-width: 600px;
+  flex: 0 0 auto; /* Prevents flex from stretching this element */
+}
+
   h1 {
     text-align: center;
     margin-bottom: 20px;
@@ -126,6 +155,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    font-family: 'Roboto';
   }
   
   .submit-button:disabled {
@@ -148,33 +178,52 @@
     color: red;
     margin-top: 10px;
   }
-  
-  .suggestions-container {
-    margin-top: 30px;
-    background-color: #f0f4f8;
+
+  .suggestions-wrapper {
+    background-color: #2d3748; /* Matching background for consistency */
+    border-radius: 8px; /* Optional rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Optional shadow for depth */
+    color: #e2e8f0; /* Light text color */
     padding: 20px;
-    border-radius: 12px;
-  }
+    max-width: 600px; /* Limits the maximum width */
+    margin-top: 0;
+}
+
+.suggestions-container {
+  margin-top: 0;
+  background-color: #2d3748; /* Matching dark background */
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  color: #e2e8f0; /* Light text */
+}
+  .suggestions-container h2 {
+    margin-top: 0px; 
+    margin-bottom: 20px; 
+    font-size: 1.5em; 
+}
   
-  .suggestion-item {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: box-shadow 0.3s ease;
-  }
+.suggestion-item {
+  background-color: #2d3748; /* Matching dark background */
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #4a5568; /* Matching the border color */
+  color: #e2e8f0; /* Light text for readability */
+}
+.suggestion-item:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px); /* Slight lift on hover */
+}
   
-  .suggestion-item:hover {
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-  }
-  
-  .suggestion-title {
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: #2d3748;
-  }
+.suggestion-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: white; /* Bright blue for suggestion titles */
+}
+
   
   .suggestion-reasoning {
     margin-top: 16px;
@@ -191,12 +240,23 @@
     font-size: 16px;
   }
   
-  .suggestion-reasoning .suggestion-text {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #2d3748;
-  }
-  
+  .suggestion-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 15px; /* Slightly larger for readability */
+    line-height: 1.7; /* Adjusted for better text flow */
+    color: #4a5568;
+}
+
+.suggestion-reasoning {
+  margin-top: 20px; /* Increase margin for better spacing */
+  background-color: #f8fafc;
+  padding: 20px; /* Increase padding */
+  border-radius: 8px; /* Rounder corners */
+  border: 1px solid #e2e8f0;
+}
+
+
   /* Adjust the existing styles to accommodate the new section */
   .suggestion-content {
     display: flex;
@@ -217,8 +277,9 @@
   .suggestion-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
-  }
+    margin-top: 24px;
+}
+
   .suggestion-label {
     font-weight: 600;
     margin-bottom: 8px;
@@ -245,33 +306,36 @@
 
   
   .suggestion-actions button {
-    padding: 10px 20px;
+    padding: 12px 24px; /* Increase padding for more clickable area */
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
-    transition: all 0.3s ease;
-  }
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
   
-  .suggestion-actions button:first-child {
-    background-color: #48bb78;
-    color: white;
-    margin-right: 12px;
-  }
+.suggestion-actions button:first-child {
+  background-color: #48bb78;
+  color: white;
+  margin-right: 12px;
+}
+
   
-  .suggestion-actions button:first-child:hover {
-    background-color: #38a169;
-  }
+.suggestion-actions button:first-child:hover {
+  background-color: #38a169;
+  transform: translateY(-2px); /* Slight lift on hover */
+}
   
-  .suggestion-actions button:last-child {
-    background-color: #f56565;
-    color: white;
-  }
+.suggestion-actions button:last-child {
+  background-color: #f56565;
+  color: white;
+}
   
-  .suggestion-actions button:last-child:hover {
-    background-color: #e53e3e;
-  }
+.suggestion-actions button:last-child:hover {
+  background-color: #e53e3e;
+  transform: translateY(-2px); /* Slight lift on hover */
+}
   
   .resume-display {
     display: flex;

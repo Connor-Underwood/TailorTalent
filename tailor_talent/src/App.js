@@ -97,8 +97,12 @@ const App = () => {
         }
       });
       
-      if (response.data && Array.isArray(response.data.suggestions)) {
-        setSuggestions(response.data.suggestions);
+      const { raw_response, suggestions} = response.data
+      
+      console.log(suggestions)
+
+      if (response.data && Array.isArray(suggestions)) {
+        setSuggestions(suggestions);
       } else {
         setError('Invalid response format from server');
         setSuggestions([]);
@@ -160,48 +164,47 @@ const App = () => {
 
 
   return (
-    <div className="resume-uploader">
-      <h1>Resume Tailoring Tool</h1>
-      
-      <ToggleSwitch
-      isFileUpload={isFileUpload}
-      setIsFileUpload={setIsFileUpload}/>
+    <div className="resume-container">
+      <div className="resume-uploader">
+        <h1>AI Resume Tailoring Tool</h1>
 
-      
-      <form onSubmit={handleSubmit}>
-        <FileUploadOrPaste 
-        isFileUpload={isFileUpload}
-        getRootProps={getRootProps}
-        getInputProps={getInputProps}
-        file={file}
-        resumeText={resumeText}
-        handleResumeTextChange={handleResumeTextChange}/>
-
-
-        <textarea
-          value={inputText}
-          onChange={handleTextChange}
-          placeholder="Enter the job description here..."
-          className="job-description-area"
+        <ToggleSwitch
+          isFileUpload={isFileUpload}
+          setIsFileUpload={setIsFileUpload}
         />
 
-        
-        
-        <button type="submit" disabled={isLoading} className="submit-button">
-          <PaperAirplaneIcon className="button-icon" />
-          Analyze Resume
-        </button>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <FileUploadOrPaste 
+            isFileUpload={isFileUpload}
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
+            file={file}
+            resumeText={resumeText}
+            handleResumeTextChange={handleResumeTextChange}
+          />
 
-      {isLoading && <ClipLoader className="clip-loader" color='blue'/>}
-      {error && <p className="error-message">{error}</p>}
+          <textarea
+            value={inputText}
+            onChange={handleTextChange}
+            placeholder="Enter the job description here..."
+            className="job-description-area"
+          />
+
+          <button type="submit" disabled={isLoading} className="submit-button">
+            <PaperAirplaneIcon className="button-icon" />
+            Analyze Resume
+          </button>
+        </form>
+
+        {isLoading && <ClipLoader className="clip-loader" color='white' />}
+        {error && <p className="error-message">{error}</p>}
+      </div>
 
       <Suggestions
-      suggestions={suggestions}
-      handleSuggestionAction={handleSuggestionAction}/>
-    
-      
-    </div>
+        suggestions={suggestions}
+        handleSuggestionAction={handleSuggestionAction}
+      />
+  </div>
   );
 }
 

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fontsource/roboto": "^5.0.14",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
     "@testing-library/jest-dom": "^5.17.0",

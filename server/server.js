@@ -20,26 +20,41 @@ app.listen(port, () => {
 });
 
 app.post('/api', async (req, res) => {
+    console.log("\n\nNew API Request!\n\n")
     const { fileTextContent, inputText} = req.body; // do some action based on file type (change prompt based on latex vs pdf text)
 
 
     if (!fileTextContent || !inputText) {
-        return res.status(400).json({ error: 'Both PDF text and input text are required' });
+        return res.status(400).json({ error: 'Both resume text and input text are required' });
     }
 
     console.log(`Received Resume Text: ${fileTextContent.substring(0, 25)}...`); // Log first 100 characters
     console.log(`Received Job Description: ${inputText.substring(0,25)}`);
     
     try {
-        const suggestions = await call_openai(fileTextContent, inputText);
-        res.json({ suggestions: suggestions });
+        console.log("call_openai()...")
+        const ai_response = await call_openai(fileTextContent, inputText);
+        console.log(`ai_response is ${ai_response.substring(0,25)}`)
+        // Split the response into lines
+        const responseLines = ai_response.split('\n');
+
+        // Extract the lines after the first one (which is the indicator line)
+        const actualResponse = responseLines.slice(1).join('\n');
+        const suggestions = await parseSuggestions(ai_response);
+
+        console.log(`actualResponse is ${actualResponse.substring(0,25)}\n\n`)
+        console.log(`suggestions are ${suggestions}\n\n`)
+
+        console.log("Sending response back!")
+        res.json({ raw_response: actualResponse, suggestions: suggestions });
     } catch (error) {
         console.error('Error calling OpenAI:', error);
         res.status(500).json({ error: 'An error occurred while processing your request' });
     }
+    console.log("\n\nEnd of Express POST API\n\n")
 });
 
-const call_openai = async (resume_text, job_description, file_type) => {
+const call_openai = async (resume_text, job_description) => {
 
     const job_description_kwds = await openai.chat.completions.create({
         messages: [
@@ -55,21 +70,38 @@ const call_openai = async (resume_text, job_description, file_type) => {
     const completion = await openai.chat.completions.create({
         messages: [
             { role: "system", content: "You are a professional resume editor. Your job is to provide suggestions to tailor a resume when given important keywords and an existing resume from a client." },
-            { role: "system", content: "For each suggestion, provide the title of the experience/project being modified (TITLE), the original text (BEFORE), the suggested modification (AFTER), and the reasoning for the change (REASONING) in the following format: TITLE: [experience/project title] BEFORE: [original text] AFTER: [suggested modification] REASONING: [explanation for the change]" },
+            { role: "system", content: "For each suggestion, \
+                TITLE: [experience/project title] BEFORE: [original text] AFTER: [suggested modification] REASONING: [explanation for the change]" },
             { role: "system", content: "Provide 3 to 5 suggestions. Each suggestion should be separated by a blank line." },
             { role: "system", content: "A modification is defined as adding important keywords to a client's resume"},
-            { role: "system", content: "Do not create entirely new experiences for the client." },
             { role: "user", content: `Here are the keywords: ${keywords}` },
-            { role: "user", content: `Here is the client's resume: ${resume_text}` }
+            { role: "user", content: `Here is the client's resume: ${resume_text}` },
+            { role: "user", content: "If the resume was in LaTeX format, say 'this resume was in latex format' as the first line in your response. \
+                otherwise, say 'this resume was in regular format' as the first line in your response."}
         ],
         model: "gpt-3.5-turbo",
     });
 
     const aiResponse = completion.choices[0].message.content;
-    return parseSuggestions(aiResponse);
+    return aiResponse;
 };
 
-const parseSuggestions = (aiResponse) => {
+const parseSuggestions = async (aiResponse) => {
+
+    const fileTypeIndicator = aiResponse.split("\n")[0]
+    if (fileTypeIndicator.toLowerCase() == "this resume was in latex format") {
+        console.log("Detected LaTeX file format from function parseSuggestions()!")
+        const adjustedResponse = await openai.chat.completions.create({
+            messages: [
+                { role: "system", content: "This text format is in LaTeX format. I'd like you to ignore the LaTeX specific syntax and just return the plain text."},
+                { role : "user", content: `Here is the text ${aiResponse}`}
+            ],
+            model: "gpt-3.5-turbo",
+        });
+        aiResponse = adjustedResponse.choices[0].message.content
+    }
+    
+
     const suggestions = aiResponse.split('\n\n').map(suggestionBlock => {
         const lines = suggestionBlock.split('\n');
         const suggestion = {};
@@ -88,6 +120,8 @@ const parseSuggestions = (aiResponse) => {
         
         return suggestion;
     });
+    console.log(aiResponse)
+    console.log(suggestions)
 
     return suggestions.filter(s => s.title && s.before && s.after && s.reasoning);
 };

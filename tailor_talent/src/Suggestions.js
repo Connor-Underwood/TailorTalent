@@ -1,7 +1,8 @@
 export const Suggestions = ({suggestions, handleSuggestionAction}) => {
     return suggestions && suggestions.length > 0 && (
+      <div className="suggestions-wrapper">
         <div className="suggestions-container">
-          <h2>Suggestions:</h2>
+          <h2>Suggestions</h2>
           {suggestions.map((suggestion, index) => (
             <div key={index} className="suggestion-item">
               <h3 className="suggestion-title">{suggestion.title}</h3>
@@ -20,9 +21,10 @@ export const Suggestions = ({suggestions, handleSuggestionAction}) => {
                 <div className="suggestion-text">{suggestion.reasoning}</div>
               </div>
               <div className="suggestion-actions">
-                <button onClick={() => handleSuggestionAction(index, true)}>Accept</button>
+                <button onClick={() => handleSuggestionAction(index, true)}>Apply</button>
                 <button onClick={() => handleSuggestionAction(index, false)}>Deny</button>
               </div>
         </div>))}
-      </div>)
+      </div>
+    </div>)
 }
