@@ -51,7 +51,6 @@ function ResumeUploader() {
     setIsLoading(true);
 
     let fileTextContent = '';
-
     if (isFileUpload) {
       if (file) {
         if (file.name.endsWith('.pdf')) {
@@ -89,7 +88,7 @@ function ResumeUploader() {
           'Content-Type': 'application/json'
         }
       });
-      
+      console.log(JSON.stringify(response))      
       if (response.data && Array.isArray(response.data.suggestions)) {
         setSuggestions(response.data.suggestions);
       } else {
@@ -105,21 +104,7 @@ function ResumeUploader() {
     }
   }
 
-  const extractTextFromPDF = async (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.onload = async () => {
-        try {
-          const typedarray = new Uint8Array(fileReader.result);
-          const pdfText = await loadPdf(typedarray);
-          resolve(pdfText);
-        } catch (error) {
-          reject(error);
-        }
-      };
-      fileReader.readAsArrayBuffer(file);
-    });
-  }
+ 
 
   const handleSuggestionAction = (index, accept) => {
     const suggestion = suggestions[index];

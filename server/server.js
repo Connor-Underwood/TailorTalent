@@ -13,13 +13,15 @@ const openai = new OpenAI({
 app.use(express.json({ limit: '50mb' }));
 
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow both origins
+    origin: ['http://localhost:3000'], // Allow both origins
     methods: ['POST', 'GET'], // Allow these HTTP methods
     allowedHeaders: ['Content-Type'] // Allow these headers
 }));
 
-app.use("/", (req, res) => {
-    res.send("Server is running")
+
+
+app.listen(5001, () => {
+    console.log(`Listening on port 5001 right now`);
 });
 
 
@@ -84,8 +86,6 @@ const parseSuggestions = (aiResponse) => {
     return suggestions.filter(s => s.title && s.before && s.after && s.reasoning);
 };
 
-app.listen(5001, () => {
-    console.log(`Listening on port 5000 right now`);
-});
+
 
 export default app;
