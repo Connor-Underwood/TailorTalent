@@ -1,10 +1,14 @@
 import OpenAI from "openai";
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv'
 
+dotenv.config()
 const app = express();
 const port = 5001;
-const openai = new OpenAI();
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY
+});
 
 // Use JSON middleware instead of text
 app.use(express.json({ limit: '50mb' }));
