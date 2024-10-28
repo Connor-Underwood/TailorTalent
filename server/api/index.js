@@ -8,25 +8,36 @@ const app = express();
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
-
 // Use JSON middleware instead of text
 app.use(express.json({ limit: '50mb' }));
 
 app.use(cors({
     origin: ['http://localhost:3000'], // Allow both origins
-    methods: ['POST', 'GET'], // Allow these HTTP methods
+    methods: ['POST'], // Allow these HTTP methods
     allowedHeaders: ['Content-Type'] // Allow these headers
 }));
 
-
-
-app.listen(5001, () => {
-    console.log(`Listening on port 5001 right now`);
-});
-
-
-
-app.post('/api', async (req, res) => {
+// Add a GET handler for /api
+app.get('/', (req, res) => {
+    res.status(200).send(`
+      <html>
+        <head>
+          <title>API Endpoint</title>
+          <style>
+            body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+            h1 { color: #6366f1; }
+            p { font-size: 18px; color: #333; }
+          </style>
+        </head>
+        <body>
+          <h1>Welcome to the Tailor Talent API</h1>
+          <p>This endpoint is for POST requests only.</p>
+          <p>Please send a POST request with JSON data to use this API.</p>
+        </body>
+      </html>
+    `);
+  });
+app.post('/', async (req, res) => {
     const { resumeText, inputText } = req.body;
 
     if (!resumeText || !inputText) {
@@ -38,7 +49,8 @@ app.post('/api', async (req, res) => {
     
     try {
         const suggestions = await call_openai(resumeText, inputText);
-        res.json({ suggestions: suggestions });
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ suggestions: suggestions }); 
     } catch (error) {
         console.error('Error calling OpenAI:', error);
         res.status(500).json({ error: 'An error occurred while processing your request' });
