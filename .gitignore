@@ -5,3 +5,4 @@ server/resume.pdf
 server/uploads/
 server/resume.aux
 server/resume.log
+server/.env
