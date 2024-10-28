@@ -80,7 +80,7 @@ function ResumeUploader() {
     setTailoredResume(fileTextContent);
     
     try {
-      const response = await axios.post('http://localhost:5001/api', { 
+      const response = await axios.post('http://localhost:5001/', { 
         resumeText: resumeText,
         inputText: inputText
       }, {

@@ -98,6 +98,9 @@ const parseSuggestions = (aiResponse) => {
     return suggestions.filter(s => s.title && s.before && s.after && s.reasoning);
 };
 
+app.listen(5001, () => {
+    console.log("Started!")
+})
 
 
 export default app;
