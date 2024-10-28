@@ -12,8 +12,8 @@ const openai = new OpenAI({
 app.use(express.json({ limit: '50mb' }));
 
 app.use(cors({
-    origin: ['http://localhost:3000'], // Allow both origins
-    methods: ['POST'], // Allow these HTTP methods
+    origin: ['https://tailor-talent-r8d22hpxa-connor-underwoods-projects.vercel.app', 'http://localhost:3000'], // Allow both origins
+    methods: ['POST', 'GET'], // Allow these HTTP methods
     allowedHeaders: ['Content-Type'] // Allow these headers
 }));
 
