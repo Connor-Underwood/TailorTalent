@@ -5,7 +5,6 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 const app = express();
-const port = 5001;
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
@@ -19,9 +18,11 @@ app.use(cors({
     allowedHeaders: ['Content-Type'] // Allow these headers
 }));
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port} right now`);
+app.use("/", (req, res) => {
+    res.send("Server is running")
 });
+
+
 
 app.post('/api', async (req, res) => {
     const { resumeText, inputText } = req.body;
@@ -82,5 +83,9 @@ const parseSuggestions = (aiResponse) => {
 
     return suggestions.filter(s => s.title && s.before && s.after && s.reasoning);
 };
+
+app.listen(5001, () => {
+    console.log(`Listening on port 5000 right now`);
+});
 
 export default app;
