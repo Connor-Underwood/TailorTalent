@@ -80,7 +80,7 @@ function ResumeUploader() {
     setTailoredResume(fileTextContent);
     
     try {
-      const response = await axios.post('https://server-iwrhstb84-connor-underwoods-projects.vercel.app/', { 
+      const response = await axios.post('https://server-three-mauve-64.vercel.app/', { 
         resumeText: resumeText,
         inputText: inputText
       }, {

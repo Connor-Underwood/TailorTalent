@@ -12,7 +12,7 @@ const openai = new OpenAI({
 app.use(express.json({ limit: '50mb' }));
 
 app.use(cors({
-    origin: ['https://tailor-talent-r8d22hpxa-connor-underwoods-projects.vercel.app', 'http://localhost:3000'], // Allow both origins
+    origin: ['https://tailor-talent.vercel.app', 'http://localhost:3000'], // Allow both origins
     methods: ['POST', 'GET'], // Allow these HTTP methods
     allowedHeaders: ['Content-Type'] // Allow these headers
 }));
@@ -98,9 +98,9 @@ const parseSuggestions = (aiResponse) => {
     return suggestions.filter(s => s.title && s.before && s.after && s.reasoning);
 };
 
-app.listen(5001, () => {
-    console.log("Started!")
-})
+// app.listen(5001, () => {
+//     console.log("Started!")
+// })
 
 
 export default app;
